@@ -4,7 +4,7 @@ import "./App.css";
 function App() {
   let post = "인천 맛집"; //서버에서 가져온 데이터라고 생각해봅시다.
   let [작명, 변경함수] = useState(["남자코트추천", "강남우동맛집", "코딩독학"]); // Destructuring 문법입니다.(javascript)
-  let [like, likeUp] = useState(0);
+  let [like, likeUp] = useState([0, 0, 0]);
   let [modal, setModal] = useState(false); //현재 UI의 상태를 표현해라..자유롭게
 
   return (
@@ -36,7 +36,7 @@ function App() {
         변경
       </button>
 
-      <div className="list">
+      {/* <div className="list">
         <h4
           onClick={() => {
             // if (modal == false) {
@@ -59,18 +59,33 @@ function App() {
         </span>
         {like}
 
-        {/* 0을 state로 만들면 좋을듯? 자주 바뀌니까 */}
-      </div>
+      </div> */}
 
-      <div className="list">
-        <h4>{작명[1]}</h4>
-        <p>2월 몇일 발행</p>
-      </div>
+      {작명.map(function (a, i) {
+        return (
+          <div className="list" key={i}>
+            <h4
+              onClick={() => {
+                setModal(!modal);
+              }}
+            >
+              {작명[i]}
+            </h4>
+            <span
+              onClick={() => {
+                let copy = [...like]; //0,0,0
+                copy[i] = copy[i] + 1;
+                likeUp(copy); //파라미터에 기능을 넣어요..
+              }}
+            >
+              ❤
+            </span>
+            {like[i]}
 
-      <div className="list">
-        <h4>{작명[2]}</h4>
-        <p>2월 몇일 발행</p>
-      </div>
+            <p>2월 몇일 발행</p>
+          </div>
+        );
+      })}
 
       {
         modal === true ? <Modal /> : null
