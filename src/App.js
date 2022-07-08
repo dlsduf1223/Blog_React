@@ -8,6 +8,7 @@ function App() {
   let [modal, setModal] = useState(false); //현재 UI의 상태를 표현해라..자유롭게
   let [title, setTitle] = useState(0);
   let [입력값, set입력값] = useState("");
+  let [date, setDate] = useState(["", "", ""]);
   return (
     <div className="App">
       <div className="black-nav">
@@ -57,7 +58,7 @@ function App() {
                 setTitle(i);
               }}
             >
-              {a}
+              {작명[i]}
               <span
                 onClick={(e) => {
                   e.stopPropagation();
@@ -70,10 +71,19 @@ function App() {
               </span>
               {like[i]}
 
-              <button>삭제</button>
+              <button
+                onClick={() => {
+                  let copy = [...작명];
+                  copy.splice(i, 1);
+                  like.splice(i, 1);
+                  변경함수(copy);
+                }}
+              >
+                삭제
+              </button>
             </h4>
 
-            <p>2월 몇일 발행</p>
+            <p>{date[i]}</p>
           </div>
         );
       })}
@@ -91,7 +101,21 @@ function App() {
           console.log(입력값);
         }}
       />{" "}
-      <button>등록</button>
+      <button
+        onClick={(e) => {
+          let copy = [...작명];
+          copy.unshift(입력값);
+          like.unshift(0);
+
+          변경함수(copy);
+
+          let today = Date();
+          console.log(today);
+          date.unshift(today);
+        }}
+      >
+        등록
+      </button>
     </div>
   );
 }
