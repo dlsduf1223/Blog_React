@@ -5,7 +5,7 @@ function App() {
   let post = "인천 맛집"; //서버에서 가져온 데이터라고 생각해봅시다.
   let [작명, 변경함수] = useState(["남자코트추천", "강남우동맛집", "코딩독학"]); // Destructuring 문법입니다.(javascript)
   let [like, likeUp] = useState([0, 0, 0]);
-  let [modal, setModal] = useState(false); //현재 UI의 상태를 표현해라..자유롭게
+  let [modal, setModal] = useState([0, 0, 0]); //현재 UI의 상태를 표현해라..자유롭게
   let [title, setTitle] = useState(0);
   let [입력값, set입력값] = useState("");
   let [date, setDate] = useState(["", "", ""]);
@@ -54,8 +54,16 @@ function App() {
           <div className="list" key={i}>
             <h4
               onClick={() => {
-                setModal(!modal);
+                let copy2 = [...modal];
                 setTitle(i);
+
+                if (copy2[i] === 0) {
+                  copy2[i] = 1;
+                } else if (copy2[i] === 1) {
+                  copy2[i] = 0;
+                }
+                setModal(copy2);
+                console.log(modal);
               }}
             >
               {작명[i]}
@@ -81,20 +89,25 @@ function App() {
               >
                 삭제
               </button>
-            </h4>
 
+              {
+                modal[i] === 1 ? (
+                  <Modal
+                    title={title}
+                    작명={작명}
+                    변경함수={변경함수}
+                    date={date}
+                  />
+                ) : null
+                //modal이 true면 컴포넌트실행, false면 빈칸, 현재 state에 따라 컴포넌트를 실행할지 말지 결정하는 조건문,
+                //왜 바로 모달을 달지 않나?
+                //변경이 쉬운 state만 건드리면 자동으로 컴포넌트가 켜지도록하기 위함..
+              }
+            </h4>
             <p>{date[i]}</p>
           </div>
         );
       })}
-      {
-        modal === true ? (
-          <Modal title={title} 작명={작명} 변경함수={변경함수} />
-        ) : null
-        //modal이 true면 컴포넌트실행, false면 빈칸, 현재 state에 따라 컴포넌트를 실행할지 말지 결정하는 조건문,
-        //왜 바로 모달을 달지 않나?
-        //변경이 쉬운 state만 건드리면 자동으로 컴포넌트가 켜지도록하기 위함..
-      }
       <input
         onChange={(e) => {
           set입력값(e.target.value);
@@ -104,14 +117,15 @@ function App() {
       <button
         onClick={(e) => {
           let copy = [...작명];
+          let today = Date();
           copy.unshift(입력값);
           like.unshift(0);
-
-          변경함수(copy);
-
-          let today = Date();
-          console.log(today);
-          date.unshift(today);
+          if (입력값 !== "") {
+            변경함수(copy);
+            date.unshift(today);
+          } else {
+            alert("제목을 입력해주세요.");
+          }
         }}
       >
         등록
@@ -129,7 +143,7 @@ function Modal(props) {
   return (
     <div className="modal">
       <h4>{props.작명[props.title]}</h4>
-      <p>날짜</p>
+      <p>{props.date[props.num]}</p>
       <p>상세내용</p>
       <button
         onClick={() => {
