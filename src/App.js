@@ -6,7 +6,8 @@ function App() {
   let [작명, 변경함수] = useState(["남자코트추천", "강남우동맛집", "코딩독학"]); // Destructuring 문법입니다.(javascript)
   let [like, likeUp] = useState([0, 0, 0]);
   let [modal, setModal] = useState(false); //현재 UI의 상태를 표현해라..자유롭게
-
+  let [title, setTitle] = useState(0);
+  let [입력값, set입력값] = useState("");
   return (
     <div className="App">
       <div className="black-nav">
@@ -14,7 +15,6 @@ function App() {
           IZM
         </h4>
       </div>
-
       <button
         onClick={() => {
           let copy1 = [...작명];
@@ -24,18 +24,6 @@ function App() {
       >
         가나다순 정렬
       </button>
-
-      <button
-        onClick={() => {
-          // 변경함수(["여자코트추천", "강남우동맛집", "코딩독학"]); //why? state전체를 갈아치워야 하기때문, 확장성이 없다.
-          let copy = [...작명]; //...rest를 쓰는 이유는?? array나 object는 주소값을 가리키기때문. 이해완
-          copy[0] = "여자코트추천";
-          변경함수(copy);
-        }}
-      >
-        변경
-      </button>
-
       {/* <div className="list">
         <h4
           onClick={() => {
@@ -60,50 +48,75 @@ function App() {
         {like}
 
       </div> */}
-
       {작명.map(function (a, i) {
         return (
           <div className="list" key={i}>
             <h4
               onClick={() => {
                 setModal(!modal);
+                setTitle(i);
               }}
             >
-              {작명[i]}
+              {a}
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  let copy = [...like]; //0,0,0
+                  copy[i] = copy[i] + 1;
+                  likeUp(copy); //파라미터에 기능을 넣어요..
+                }}
+              >
+                ❤
+              </span>
+              {like[i]}
+
+              <button>삭제</button>
             </h4>
-            <span
-              onClick={() => {
-                let copy = [...like]; //0,0,0
-                copy[i] = copy[i] + 1;
-                likeUp(copy); //파라미터에 기능을 넣어요..
-              }}
-            >
-              ❤
-            </span>
-            {like[i]}
 
             <p>2월 몇일 발행</p>
           </div>
         );
       })}
-
       {
-        modal === true ? <Modal /> : null
+        modal === true ? (
+          <Modal title={title} 작명={작명} 변경함수={변경함수} />
+        ) : null
         //modal이 true면 컴포넌트실행, false면 빈칸, 현재 state에 따라 컴포넌트를 실행할지 말지 결정하는 조건문,
         //왜 바로 모달을 달지 않나?
         //변경이 쉬운 state만 건드리면 자동으로 컴포넌트가 켜지도록하기 위함..
       }
+      <input
+        onChange={(e) => {
+          set입력값(e.target.value);
+          console.log(입력값);
+        }}
+      />{" "}
+      <button>등록</button>
     </div>
   );
 }
 
+// function 함수(){
+//   let a = 10; //모든 변수는 함수를 탈출 할 수 없다. props 문법을 써야함.
+// }
+
 //컴포넌트 만드는 법!
-function Modal() {
+function Modal(props) {
   return (
     <div className="modal">
-      <h4>제목</h4>
+      <h4>{props.작명[props.title]}</h4>
       <p>날짜</p>
       <p>상세내용</p>
+      <button
+        onClick={() => {
+          // 변경함수(["여자코트추천", "강남우동맛집", "코딩독학"]); //why? state전체를 갈아치워야 하기때문, 확장성이 없다.
+          let copy = [props.작명[0]]; //...rest를 쓰는 이유는?? array나 object는 주소값을 가리키기때문. 이해완
+          copy = ["여자코트추천", "강남우동맛집", "코딩독학"];
+          props.변경함수(copy);
+        }}
+      >
+        글수정
+      </button>
     </div>
   );
 }
