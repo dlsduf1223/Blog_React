@@ -58,6 +58,7 @@ function App() {
                 setTitle(i);
 
                 if (copy2[i] === 0) {
+                  copy2.fill(0);
                   copy2[i] = 1;
                 } else if (copy2[i] === 1) {
                   copy2[i] = 0;
@@ -120,6 +121,7 @@ function App() {
           let today = Date();
           copy.unshift(입력값);
           like.unshift(0);
+          modal.unshift(0);
           if (입력값 !== "") {
             변경함수(copy);
             date.unshift(today);
