@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import { Button, Navbar, Nav, Container } from "react-bootstrap";
 
 function App() {
   let post = "인천 맛집"; //서버에서 가져온 데이터라고 생각해봅시다.
