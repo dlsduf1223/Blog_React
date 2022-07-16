@@ -3,42 +3,23 @@ import "./App.css";
 import { Button, Navbar, Nav, Container } from "react-bootstrap";
 
 function App() {
-  let post = "인천 맛집"; //서버에서 가져온 데이터라고 생각해봅시다.
   let [내용, 변경함수] = useState([]); // Destructuring 문법입니다.(javascript)
+  let [제목, 제목변경함수] = useState([]); // Destructuring 문법입니다.(javascript)
+
   let [like, likeUp] = useState([0, 0, 0]);
   let [modal, setModal] = useState([0, 0, 0]); //현재 UI의 상태를 표현해라..자유롭게
   let [title, setTitle] = useState(0);
   let [입력값, set입력값] = useState("");
+  let [제목입력값, set제목입력값] = useState("");
   let [date, setDate] = useState(["", "", ""]);
   return (
     <div className="App">
       <div className="black-nav">
         <h4>IZM BLOG</h4>
       </div>
-      {/* <div className="list">
-        <h4
-          onClick={() => {
-            // if (modal == false) {
-            //   setModal(true);
-            // } else {
-            //   setModal(false);
-            // }            충분히 가능한 코드다. but, 간단하게
-            setModal(!modal); //!modal은 modal의 현재 state의 반대 값으로 변경해주는 것.... true면 false로, false면 true로...(true,false기에 가능한것)
-          }}
-        >
-          {내용[0]}
-        </h4>
-        <p>2월 몇일 발행</p>
-        <span
-          onClick={() => {
-            likeUp(like + 1); //파라미터에 기능을 넣어요..
-          }}
-        >
-          ❤
-        </span>
-        {like}
 
-      </div> */}
+      {/* 리스팅부분 */}
+
       {내용.map(function (a, i) {
         return (
           <div className="list" key={i}>
@@ -58,7 +39,7 @@ function App() {
                 console.log(modal);
               }}
             >
-              <h2>{내용[i]}</h2>
+              <h2>{제목[i]}</h2>
               <span
                 style={{ marginRight: 5, color: "red" }}
                 onClick={(e) => {
@@ -71,10 +52,9 @@ function App() {
                 ❤
               </span>
               {like[i]}
-              <div>
+              <div className="delete">
                 {date[i]}
                 <button
-                  className="delete"
                   onClick={(e) => {
                     e.stopPropagation();
                     let copy = [...내용];
@@ -90,6 +70,7 @@ function App() {
               {
                 modal[i] === 1 ? (
                   <Modal
+                    제목={제목}
                     title={title}
                     내용={내용}
                     변경함수={변경함수}
@@ -104,35 +85,54 @@ function App() {
           </div>
         );
       })}
-      <textarea
-        cols="100"
-        rows="20"
-        placeholder="내용을 입력해주세요."
-        onChange={(e) => {
-          set입력값(e.target.value);
-          console.log(입력값);
-        }}
-      />
-      <br />
-      <>
-        <button
-          onClick={(e) => {
-            let copy = [...내용];
-            let today = Date();
-            copy.unshift(입력값);
-            like.unshift(0);
-            modal.unshift(0);
-            if (입력값 !== "") {
-              변경함수(copy);
-              date.unshift(today);
-            } else {
-              alert("제목을 입력해주세요.");
-            }
+
+      {/* 입력 창 */}
+
+      <div className="inputing">
+        <input
+          type="text"
+          placeholder="제목을 입력해주세요."
+          size="97"
+          onChange={(e) => {
+            set제목입력값(e.target.value);
+            console.log(제목입력값);
           }}
-        >
-          등록
-        </button>
-      </>
+        />
+        <br />
+        <br />
+        <textarea
+          cols="100"
+          rows="20"
+          placeholder="내용을 입력해주세요."
+          onChange={(e) => {
+            set입력값(e.target.value);
+            console.log(입력값);
+          }}
+        />
+        <br />
+        <>
+          <button
+            onClick={(e) => {
+              let copy = [...내용];
+              let copy1 = [...제목];
+              let today = Date();
+              copy.unshift(입력값);
+              copy1.unshift(제목입력값);
+              like.unshift(0);
+              modal.unshift(0);
+              if (입력값 !== "") {
+                변경함수(copy);
+                제목변경함수(copy1);
+                date.unshift(today);
+              } else {
+                alert("내용을 입력해주세요.");
+              }
+            }}
+          >
+            등록
+          </button>
+        </>
+      </div>
     </div>
   );
 }
@@ -142,10 +142,12 @@ function App() {
 // }
 
 //컴포넌트 만드는 법!
+
+// 클릭 후 모달창
+
 function Modal(props) {
   return (
     <div className="modal">
-      <h4>{props.내용[props.title]}</h4>
       <p>{props.date[props.num]}</p>
       <p>{props.내용[props.title]}</p>
       <button
