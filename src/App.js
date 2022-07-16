@@ -4,7 +4,7 @@ import { Button, Navbar, Nav, Container } from "react-bootstrap";
 
 function App() {
   let post = "인천 맛집"; //서버에서 가져온 데이터라고 생각해봅시다.
-  let [작명, 변경함수] = useState([]); // Destructuring 문법입니다.(javascript)
+  let [내용, 변경함수] = useState([]); // Destructuring 문법입니다.(javascript)
   let [like, likeUp] = useState([0, 0, 0]);
   let [modal, setModal] = useState([0, 0, 0]); //현재 UI의 상태를 표현해라..자유롭게
   let [title, setTitle] = useState(0);
@@ -13,11 +13,7 @@ function App() {
   return (
     <div className="App">
       <div className="black-nav">
-        <h4 id={post} style={{ color: "red", fontSize: "16px" }}>
-          IZM BLOG의 자유로운 포스팅
-        </h4>
-        
-        <h4>프로필보기</h4>
+        <h4>IZM BLOG</h4>
       </div>
       {/* <div className="list">
         <h4
@@ -30,7 +26,7 @@ function App() {
             setModal(!modal); //!modal은 modal의 현재 state의 반대 값으로 변경해주는 것.... true면 false로, false면 true로...(true,false기에 가능한것)
           }}
         >
-          {작명[0]}
+          {내용[0]}
         </h4>
         <p>2월 몇일 발행</p>
         <span
@@ -43,7 +39,7 @@ function App() {
         {like}
 
       </div> */}
-      {작명.map(function (a, i) {
+      {내용.map(function (a, i) {
         return (
           <div className="list" key={i}>
             <h4
@@ -62,8 +58,9 @@ function App() {
                 console.log(modal);
               }}
             >
-              {작명[i]}
+              <h2>{내용[i]}</h2>
               <span
+                style={{ marginRight: 5, color: "red" }}
                 onClick={(e) => {
                   e.stopPropagation();
                   let copy = [...like]; //0,0,0
@@ -74,24 +71,27 @@ function App() {
                 ❤
               </span>
               {like[i]}
-
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  let copy = [...작명];
-                  copy.splice(i, 1);
-                  like.splice(i, 1);
-                  변경함수(copy);
-                }}
-              >
-                삭제
-              </button>
+              <div>
+                {date[i]}
+                <button
+                  className="delete"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    let copy = [...내용];
+                    copy.splice(i, 1);
+                    like.splice(i, 1);
+                    변경함수(copy);
+                  }}
+                >
+                  삭제
+                </button>
+              </div>
 
               {
                 modal[i] === 1 ? (
                   <Modal
                     title={title}
-                    작명={작명}
+                    내용={내용}
                     변경함수={변경함수}
                     date={date}
                   />
@@ -101,36 +101,39 @@ function App() {
                 //변경이 쉬운 state만 건드리면 자동으로 컴포넌트가 켜지도록하기 위함..
               }
             </h4>
-            <p>{date[i]}</p>
           </div>
         );
       })}
-      <input
+      <textarea
+        cols="100"
+        rows="20"
+        placeholder="내용을 입력해주세요."
         onChange={(e) => {
           set입력값(e.target.value);
           console.log(입력값);
         }}
-      />{" "}
-      <button
-        onClick={(e) => {
-          let copy = [...작명];
-          let today = Date();
-          copy.unshift(입력값);
-          like.unshift(0);
-          modal.unshift(0);
-          if (입력값 !== "") {
-            변경함수(copy);
-            date.unshift(today);
-          } else {
-            alert("제목을 입력해주세요.");
-          }
-        }}
-      >
-        등록
-      </button>
-
+      />
+      <br />
+      <>
+        <button
+          onClick={(e) => {
+            let copy = [...내용];
+            let today = Date();
+            copy.unshift(입력값);
+            like.unshift(0);
+            modal.unshift(0);
+            if (입력값 !== "") {
+              변경함수(copy);
+              date.unshift(today);
+            } else {
+              alert("제목을 입력해주세요.");
+            }
+          }}
+        >
+          등록
+        </button>
+      </>
     </div>
-    
   );
 }
 
@@ -142,13 +145,13 @@ function App() {
 function Modal(props) {
   return (
     <div className="modal">
-      <h4>{props.작명[props.title]}</h4>
+      <h4>{props.내용[props.title]}</h4>
       <p>{props.date[props.num]}</p>
-      <p>상세내용</p>
+      <p>{props.내용[props.title]}</p>
       <button
         onClick={() => {
           // 변경함수(["여자코트추천", "강남우동맛집", "코딩독학"]); //why? state전체를 갈아치워야 하기때문, 확장성이 없다.
-          let copy = [props.작명[0]]; //...rest를 쓰는 이유는?? array나 object는 주소값을 가리키기때문. 이해완
+          let copy = [props.내용[0]]; //...rest를 쓰는 이유는?? array나 object는 주소값을 가리키기때문. 이해완
           copy = ["여자코트추천", "강남우동맛집", "코딩독학"];
           props.변경함수(copy);
         }}

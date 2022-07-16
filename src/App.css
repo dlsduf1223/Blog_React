@@ -12,6 +12,11 @@ div {
   border-bottom: 1px solid grey;
 }
 
+.delete {
+  margin: 0 10px;
+  float: right;
+}
+
 .modal {
   margin-top: 20px;
   padding: 20px;
